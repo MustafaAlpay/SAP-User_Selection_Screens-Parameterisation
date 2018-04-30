@@ -1,0 +1,42 @@
+*&---------------------------------------------------------------------*
+*& Report ZMUSTAFA_LIST_DIALOG
+*&---------------------------------------------------------------------*
+*& Created by Mustafa Alpay
+*&---------------------------------------------------------------------*
+
+*select employees by employeeID selection screen
+REPORT zmustafa_list_dialog.
+
+TABLES: zmustafa.
+
+DATA: counter TYPE i VALUE 0.
+DATA: wa_employee LIKE zmustafa-employee.
+
+PARAMETERS: employid LIKE zmustafa-employee
+                          DEFAULT '10000001' OBLIGATORY,
+
+            greater  RADIOBUTTON GROUP grp1,
+            lessthen RADIOBUTTON GROUP grp1.
+
+SELECT * FROM zmustafa.
+  IF lessthen = 'X'.
+    IF zmustafa-employee < employid.
+      WRITE: / zmustafa.
+      counter = counter + 1.
+    ENDIF.
+  ELSE.
+    IF zmustafa-employee > employid.
+      WRITE: / zmustafa.
+      counter = counter + 1.
+    ENDIF.
+  ENDIF.
+
+ENDSELECT.
+
+IF counter = 0.
+  CALL FUNCTION 'POPUP_TO_INFORM'
+    EXPORTING
+      titel = 'No record found!'
+      txt1  = 'Please change your criterias, no record found!'
+      txt2  = ''.
+ENDIF.
